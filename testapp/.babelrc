@@ -1,0 +1,29 @@
+{
+    "presets": ["module:metro-react-native-babel-preset"],
+    "plugins": [
+      ["module-resolver", {
+        "root": ["./"],
+        "alias": {
+          "asset-image": "./asset/images/image.js",
+          "fonts": "./asset/fonts/",
+          "style": "./asset/style/",
+          "constants": "./asset/constants/",
+          "screen": "./js/screen/",
+          "etc": "./js/etc/",
+          "navigator": "./js/navigator/",
+          "info": "./js/info/",
+          "component-bar": "./js/component/bar/",
+          "component-input": "./js/component/input/",
+          "component-picker": "./js/component/picker/",
+          "component-animation": "./js/component/animation/",
+          "component-button": "./js/component/button/",
+          "component-view": "./js/component/view/",
+          "component-image": "./js/component/image/",
+          "component-label": "./js/component/label/",
+          "component-cell": "./js/component/cell/",
+          "component-indicator": "./js/component/indicator/",
+        },
+        "cwd": "packagejson",
+      }]
+    ]
+  }
