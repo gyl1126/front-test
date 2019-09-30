@@ -13,22 +13,14 @@ import {
   StatusBar,
   Button,
   TextInput,
+  Text,
 } from 'react-native';
 import ColorStyle from 'style/color';
 import NormalButton, {NORMALBUTTON_THEHE_WHITE} from 'component-button/normalButton';
 import * as common from "../communication/NetworkUserInfo";
 import { whileStatement } from '@babel/types';
-import {
-  USERINFO_USERTYPE,
-  USERINFO_PASSWORD,
-  USERINFO_NAME,
-  USERINFO_PHONE,
-  USERINFO_EMAIL,
-  USERINFO_BIRTHDAY,
-  USERINFO_GENDER,
-  USERINFO_ADVERTISE,
-  USERINFO_MARKETING,
-} from 'info/UserInfo';
+import UserInfo from '../info/UserInfo'
+import { userInfo } from 'os';
 /**
  * @protocol EmptyScreen
  * @date 2019/02/28
@@ -36,15 +28,20 @@ import {
  */
 common.requestLoginIn = common.requestLoginIn.bind(this);
 
+
 export default class EmptyScreen extends Component {
   constructor(props) {
      super(props);
     this.state = {
-
+      type: null,
       name: '',
+      newpwd:'',
       pwd:'',
       phone:'',
       email:'',
+      birth:'',
+      gender:null,
+
     };
   }
   render() {
@@ -54,11 +51,18 @@ export default class EmptyScreen extends Component {
           barStyle="light-content"
           backgroundColor="#4F6D7A"
         />
+         <TextInput
+          style={{height: 40}}
+          placeholder="새비밀번호"
+          onChangeText={(text) => this.setState({newpwd: text})}
+          value={this.state.newpwd}
+        />
+        
     <TextInput
           style={{height: 40, backgroundColor: "white"}}
-          placeholder="이름"
-          onChangeText={(text) => this.setState({name: text})}
-          value={this.state.name}
+          placeholder="타입"
+          onChangeText={(text) => this.setState({type: text})}
+          value={this.state.type}
         />
         <TextInput
           style={{height: 40}}
@@ -78,11 +82,25 @@ export default class EmptyScreen extends Component {
           onChangeText={(text) => this.setState({email: text})}
           value={this.state.email}
         />
-
-<NormalButton containerStyle={styles.button}
+         <TextInput
+          style={{height: 40, backgroundColor: "white"}}
+          placeholder="생일"
+          onChangeText={(text) => this.setState({birth: text})}
+          value={this.state.birth}
+        />
+         <TextInput
+          style={{height: 40}}
+          placeholder="성별"
+          onChangeText={(text) => this.setState({gender: text})}
+          value={this.state.gender}
+        />
+        <Text Style={{height: 40, backgroundColor: "white"}}>{common.loginInfo.userID}</Text>
+        
+        <NormalButton containerStyle={styles.button}
             title='시작하기'
             theme={NORMALBUTTON_THEHE_WHITE}
-            method={() => common.requestLoginIn(this.state.phone,this.state.pwd)}/>
+            method={() => common.putUserPwd( this.state.pwd, this.state.newpwd, this.state.phone,this.state.gender)}/>
+       
       </View>
     );
   }

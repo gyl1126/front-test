@@ -3,22 +3,12 @@ import UserInfo from '../info/UserInfo'
 var url = 'http://52.79.109.107:81';
 
 
-/** 
- * 약관을 불러온다.
- *  
- * @param html 불러 올 약관 페이지경로 
- */
+//외부에서 사용하기위한 객체
+export const loginInfo = new UserInfo();
 
-export const getHtmlPage = (html) => {
-  return fetch(url + html)
-  .then((response) => { console.log(response)
-    return response
-  })
-  .catch((error) => {
-    console.error(error);
-  })
-  .done();
-}
+
+
+
 
 
 /**
@@ -41,14 +31,16 @@ export const getCheckExistPhone = (phoneNum) => {
 
 /**
  * 회원가입을 요청한다.
+ * FIEXED 이메일 사용유무
  * 
  * @param name 유저 이름
  * @param phone 휴대폰번호
+ * @param email 이메일
  * @param advertise 광고 동의여부
  * @param marketing: 마케팅 동의여부
  * 
  */
-export const requestSignUp = (name, pwd, phone, email,) => {
+export const requestSignUp = (name, pwd, phone, advertise, marketing) => {
   fetch(url + '/user',
   {
     method: 'POST',
@@ -61,16 +53,14 @@ export const requestSignUp = (name, pwd, phone, email,) => {
       password: pwd,
       name: name,
       phone: phone,
-      email: email,
+      email: '',
       birth_day: 0,
       gender: 0,
-      advertise: true,
-      marketing: true,     
+      advertise: advertise,
+      marketing: marketing,     
     })
   }).then( (res)=> {
     console.log(res)
-    // deviceStorage.saveKey("id_token", response.data.jwt);
-    //this.props.navigation.navigate('Home')
 }) 
   .catch((error) => {
     console.error(error);
@@ -83,16 +73,17 @@ export const requestSignUp = (name, pwd, phone, email,) => {
  * 기존 회원 로그인을 요청한다.
  * FIXED: 정책결정필요
  * 
+ * @param phone 유저휴대폰번호
+ * @param pwd 유저비밀번호
+ * 
  */
 
  export const requestLoginIn = (phone, pwd) =>{  
   return fetch(url +'/user/auth?phone='+ phone +'&password=' + pwd)
   .then((response) => response.json())
   .then((res) => {
-    console.log(res);
-    var userInfo = new UserInfo();
-    userInfo.parseFromDictionary(res.data);
-    console.log(userInfo.userID)   
+    loginInfo.parseFromDictionary(res.data);
+    console.log(loginInfo);
   })
   .catch((error) => {
     console.error(error);
@@ -101,12 +92,20 @@ export const requestSignUp = (name, pwd, phone, email,) => {
 }
 
 /**
- * 비밀번호를 재설정한다. 
+ * (비밀번호를 알고있는 경우) 비밀번호를 재설정한다. 
+ * 
+ * 
+ * @param type 유저타입 
  * @param password: 유저 비밀번호
+ * @param newpassword: 변경할 유저 비밀번호
+ * @param phone: 휴대폰번호
+ * @param email: 이메일번호
+ * @param birthday: 생일
+ * @param gender: 성별
  * 
  */
-export const putUserPwd = (phone, userPwd) => {
-  fetch( url + phone,
+export const putUserPwd = (  password, newpassword, phone, gender) => {
+  fetch( url + '/user',
    {
     method: 'PUT',
     headers: {
@@ -114,7 +113,14 @@ export const putUserPwd = (phone, userPwd) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      password: userPwd,   
+     // user_type: type,
+    // name: name,
+      password: password,
+      new_password: newpassword,     
+      phone: phone,
+      gender: gender,  
+     // email: email,
+     // birth_day: birthday,
     })
   }).then(res=>res.json())
   .then((res) => {
